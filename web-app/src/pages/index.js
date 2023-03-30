@@ -8,7 +8,7 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import ConnectButtonCustom from "../Components/ConnectButtonCustom";
 import { polygonMumbai, goerli, optimismGoerli } from "wagmi/chains";
 import { Chat } from "@pushprotocol/uiweb";
-import { ITheme } from "@pushprotocol/uiweb";
+// import { ITheme } from "@pushprotocol/uiweb";
 // import { useAccount } from "wagmi";
 
 const chains = [polygonMumbai, goerli, optimismGoerli];
@@ -156,11 +156,17 @@ export default function Home() {
               src="/static/instagram.png"
             />
           </div>
-          <Chat
-            account={address} //user address
-            supportAddress="0x3F732382BCfE36B9e713DE33b8eD673BaCA49DFB" //support address
-            env="staging"
-          />
+          {
+            isConnected
+            ?
+            <Chat
+              account={address} //user address
+              supportAddress="0x3F732382BCfE36B9e713DE33b8eD673BaCA49DFB" //support address
+              env="staging"
+            /> 
+            :
+            null
+          }
         </footer>
       </div>
     </RainbowKitProvider>
