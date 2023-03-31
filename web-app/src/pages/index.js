@@ -1,5 +1,6 @@
 import styles from "@/styles/Home.module.css";
 import Image from "next/image";
+import { useState } from "react";
 // import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 // import {sample} from "swirl-sdk-sample";
@@ -8,6 +9,7 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import ConnectButtonCustom from "../Components/ConnectButtonCustom";
 import { polygonMumbai, goerli, optimismGoerli } from "wagmi/chains";
 import { Chat } from "@pushprotocol/uiweb";
+import { gaslessOnboarding } from "@/Components/social-onboard";
 // import { ITheme } from "@pushprotocol/uiweb";
 // import { useAccount } from "wagmi";
 
@@ -16,7 +18,29 @@ const chains = [polygonMumbai, goerli, optimismGoerli];
 export default function Home() {
   const { isConnected } = useAccount();
   const { address } = useAccount();
+  const [walletAddress, setWalletAddress] = useState("");
+  const [gaslessWallet, setGaslessWallet] = useState({});
+  const [web3AuthProvider, setWeb3AuthProvider] = useState(null);
   
+  const login = async() => {
+    try {
+      await gaslessOnboarding.init();
+      const provider = await gaslessOnboarding.login();
+      if (provider) {
+        setWeb3AuthProvider(provider);
+      }
+
+      const gaslessWallet = await gaslessOnboarding.getGaslessWallet();
+      if (!gaslessWallet.isInitiated()) await gaslessWallet.init();
+      const address = gaslessWallet.getAddress();
+      console.log(address)
+      setGaslessWallet(gaslessWallet);
+      setWalletAddress(address);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   return (
     <RainbowKitProvider chains={chains}>
@@ -35,9 +59,9 @@ export default function Home() {
             />
           </div>
           <div className={styles.btn}>
-            {/* <button className={styles.cntBtn}>
+            <button className={styles.cntBtn} onClick={()=>{ login() }}>
               CONNECT WALLET
-            </button> */}
+            </button>
             <ConnectButtonCustom />
           </div>
         </nav>
