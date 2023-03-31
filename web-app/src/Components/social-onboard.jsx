@@ -2,11 +2,11 @@ import {
     GaslessOnboarding
   } from "@gelatonetwork/gasless-onboarding";
   
-  if (!process.env.VERCEL_ENV_RPC) {
+  if (!process.env.RPC) {
     console.error("No app RPC");
   }
   
-  if (!process.env.VERCEL_ENV_API_KEY) {
+  if (!process.env.API_KEY) {
     console.error("No API key");
   }
   
@@ -19,7 +19,7 @@ import {
     domains: [origin],
     chain: {
       id: 80001, // polygon-mumbai
-      rpcUrl: process.env.VERCEL_ENV_RPC,
+      rpcUrl: process.env.RPC,
     },
     openLogin: {
       redirectUrl: origin,
@@ -28,7 +28,7 @@ import {
   };
   
   export const gaslessWalletConfig = {
-    apiKey: process.env.VERCEL_ENV_API_KEY,
+    apiKey: process.env.API_KEY,
   };
   
   export const gaslessOnboarding = new GaslessOnboarding(
